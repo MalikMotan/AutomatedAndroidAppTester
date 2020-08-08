@@ -23,8 +23,10 @@ import com.parser.android.model.SimpleClassModel;
 
 /**
  * 
- * @author 91981
- *
+ * @author @MalikMotan
+ * This interface is to be used by all such classes which need to perform the resource check. 
+ * For example CameraCheck, CameraApi2Check, DriveCheck and LocationCheck etc. implement this interface.
+ * 
  */
 public interface ResourceCheck {
 	
@@ -42,7 +44,6 @@ public interface ResourceCheck {
 	
 	public List<String> getMsgs();
 	
-<<<<<<< HEAD
 	/**
 	 * This method is used to check resource usage iteratively
 	 * it checks the usage in instance variable as well as method and find out the final call from life cycle method
@@ -54,16 +55,6 @@ public interface ResourceCheck {
 	@SuppressWarnings("unchecked")
 	public default boolean checkMethodCall(String value, Map<String, String> methods, List<String> fields, String checkMethod) {
 		methods = (Map<String, String>) ((HashMap<String, String>)methods).clone();
-=======
-	
-	/**
-	 * @param value - to search
-	 * @param methods - in all methods of Activity
-	 * @param checkMethod - in which method specific check
-	 * @return
-	 */
-	public default boolean checkMethodCall(String value, Map<String, String> methods, String checkMethod) {
->>>>>>> 5b534b18114f4801ab03689cc6d0e339611e91bf
 		if (!value.equals("")) {
 			if(methods.containsKey(checkMethod)) 
 			{
@@ -157,7 +148,7 @@ public interface ResourceCheck {
                 					{
                 						exist = true;
                 						methodName = method.getName().getIdentifier();
-                						stmt.setLineComment("TODO: " + recommendation + "\n");
+                						stmt.setLineComment("TODO: " + recommendation + System.lineSeparator() );
                 					}
                 				}
                 				method.setBody(new BlockStmt(stmts));
@@ -178,17 +169,18 @@ public interface ResourceCheck {
                             		{
                             			if(method.getComment().isPresent())
                                 		{
-                                			if (method.getComment().get().isLineComment())
+                                			if (method.getComment().get().isLineComment() || method.getComment().get().isBlockComment())
                                 			{
                                 				Comment comment = member.getComment().get();
-                        						comment.setContent(comment.getContent() + " \n " + "TODO: " + recommendation + "\n");
-                        						method.setComment(comment);
+                                				String content = comment.getContent().replace("//","");
+                                				if(!content.contains(recommendation))
+                                					method.setBlockComment(System.lineSeparator() + "\t" + content + System.lineSeparator() + "\t" + "TODO: " + recommendation + System.lineSeparator() + "\t");
                                 			}
                                 			else
-                                				method.setComment(new LineComment("TODO: " + recommendation + "\n")); 
+                                				method.setComment(new LineComment("TODO: " + recommendation)); 
                                 		}
                                 		else
-                                			method.setComment(new LineComment("TODO: " + recommendation + "\n"));
+                                			method.setComment(new LineComment("TODO: " + recommendation));
                             		}
                             	}
                             }

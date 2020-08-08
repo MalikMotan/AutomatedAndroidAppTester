@@ -12,7 +12,7 @@ import com.parser.android.constants.ParserProperties;
 import com.parser.android.model.SimpleClassModel;
 
 /**
- * @author Admin
+ * @author @MalikMotan
  *
  */
 public class CameraCheck implements ResourceCheck {
